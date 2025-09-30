@@ -1,2 +1,6 @@
 # Environment variables - Gemini API Key
 .env
+
+originals
+NarrativeDatabase
+

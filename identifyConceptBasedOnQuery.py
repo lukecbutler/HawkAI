@@ -4,7 +4,7 @@ from google import genai
 import numpy as np
 
 # Gather user query and connect to Gemini
-USER_QUERY = "I felt isolated during my first semester, everyone else around me seems to be doing so much better socially."
+USER_QUERY = "I am noticing racial inequality around my college campus."
 client = genai.Client()
 
 
