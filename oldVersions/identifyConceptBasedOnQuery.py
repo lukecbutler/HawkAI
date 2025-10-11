@@ -1,3 +1,8 @@
+'''
+This files Identifies a sociological concept based on a user query
+'''
+
+
 # Import Needed Libraries
 from pathlib import Path
 from google import genai
@@ -20,11 +25,13 @@ def load_texts(folder_path):
 sampleDataDirectory = Path("./sample_narratives")
 narrative_texts = load_texts(sampleDataDirectory)
 
+
 '''Embed Narratives'''
 """embedded_narratives = client.models.embed_content(
     model = "gemini-embedding-001", 
     contents = narrative_texts
 )"""
+
 
 '''Embed Query'''
 """embedded_query = client.models.embed_content(

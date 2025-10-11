@@ -1,3 +1,8 @@
+'''
+This files returns the most related narrative to the User Query
+'''
+
+
 # Embedding -> translates the meaning of text into numbers, 
 # finds closest relation between two concepts
 
