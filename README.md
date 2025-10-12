@@ -12,7 +12,7 @@ output:
 
 objective 1: Strip personal information from all student narratives [√]
 objective 2: Match sociological concept (ie. the user query) to most relative narrative []
-objective 3: Input information into Gemini API[]
+objective 3: Input information into Gemini API[√]
 objective 3.5: Make sure HawkAI can run 500+ embedded articles []
 
 

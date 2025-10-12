@@ -22,7 +22,6 @@ def loadJSONIndexFromCache(cacheFile: Path) -> list:
     try:
         with open(cacheFile, "r") as f:
             searchIndex = json.load(f)
-        print("Successfully loaded data from JSON file")
     except FileNotFoundError:
         print(f"❌ Error: The file '{cacheFile.name}' was not found.")
     except json.JSONDecodeError:
@@ -92,6 +91,62 @@ def findNarrativeUsingDotProduct(embeddedQuery: list, searchIndex: list) -> str:
     return bestNarrative['text']
 
 
+#4. Construct output
+def generateFinalOutput(userConcept: str, narrativeText: str, client) -> str:
+    """
+    Generates a structured final response using a generative LLM.
+
+    Args:
+        userConcept: The sociological concept the user asked about.
+        narrativeText: The full text of the most relevant narrative.
+        client: The initialized Gemini API client.
+
+    Returns:
+        A formatted string containing the Quote, Summary, and Concept,
+        or an error message.
+    """
+    
+    # 1. Construct the detailed prompt for the LLM.
+    prompt = f"""
+    You are a helpful sociological assistant. Your task is to explain a concept using a relevant personal story.
+
+    The user wants to understand this sociological concept:
+    ---
+    {userConcept}
+    ---
+
+    Here is a relevant personal narrative that illustrates this concept:
+    ---
+    {narrativeText}
+    ---
+
+    Based on the provided concept and narrative, generate a response with exactly these three parts, formatted as follows:
+
+    **Quote:**
+    Find a single, powerful passage of 3 to 5 sentences from the narrative where the author expresses the feelings or experiences most relevant to the concept. Quote it word-for-word.
+
+    **Summary:**
+    Write a brief summary of the narrative that provides the necessary context to understand the emotional weight of the quote.
+
+    **Concept:**
+    Provide a clear, academic description of the sociological concept '{userConcept}'.
+    """
+    
+    try:
+        # 2. Call the generative model.
+        response = client.models.generate_content(
+            model="gemini-2.5-flash",
+            contents=prompt
+        )
+        
+        # 3. Return the clean text from the response.
+        return response.text
+        
+    except Exception as e:
+        # Handle potential API errors
+        print(f"❌ An error occurred during AI generation: {e}")
+        return "Sorry, an error occurred while generating the response."
+
 if __name__ == "__main__":
 
     USER_QUERY = 'Structure in Society'
@@ -107,4 +162,4 @@ if __name__ == "__main__":
     # match the embeded query to the embedded narrative
     mostRelatedNarrativeToQuery = findNarrativeUsingDotProduct(embeddedQuery=embeddedQuery, searchIndex=searchIndex)
     
-    print(mostRelatedNarrativeToQuery)
+    print(generateFinalOutput(USER_QUERY, mostRelatedNarrativeToQuery, client))

@@ -77,6 +77,7 @@ def buildCache(narrativeData: list, cachePath: Path) -> None:
         json.dump(narrativeData, f, indent=4)
     print("\n-> Save complete.")
 
+
 if __name__ == "__main__":
     sampleDataDirectory = Path('./sampleNarratives')
     narrativeData = loadNarrativesFromFolder(sampleDataDirectory)
