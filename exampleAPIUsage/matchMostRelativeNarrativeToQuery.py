@@ -34,6 +34,7 @@ def load_texts(folder_path):
 narrative_texts = load_texts(sampleDataDirectory)
 
 
+
 #Main Program
 ''''''''''''''''''''''''#API CALLS''''''''''''''''''''''''''''''''
 # First API Call, creates embeddings for the narratives

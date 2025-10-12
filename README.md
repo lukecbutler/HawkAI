@@ -18,8 +18,8 @@ objective 3.5: Make sure HawkAI can run 500+ embedded articles []
 
 instructions:
 Hawk AI Bot Instructions v2
-1. The user enters a prompt for helping to understand a learning concept.
-2. Bot identifies a narrative in the knowledge corpus that is relevant to that concept.
+1. The user enters a prompt for helping to understand a learning concept. [√]
+2. Bot identifies a narrative in the knowledge corpus that is relevant to that concept. [√]
 3. Then generate an output with these elements:
     a. The quote. Word for word from the identified narrative. AI finds a quotable passage (3-5 sentences, but LLM uses discretion) in the narrative where the author expresses their feelings, experiences, or insights that are most relevant to the user query (the inputted sociological concept).
 

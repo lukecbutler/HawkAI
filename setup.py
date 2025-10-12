@@ -3,17 +3,18 @@ from pathlib import Path
 from google import genai
 import json
 
-
 client = genai.Client()
 
-#1
-'''Get text of all narratives from sampleNarrative folder'''
-# input: folder path to txt files
-# output: list where each element is the text document data
+#1.
 def loadNarrativesFromFolder(folderPath: Path)-> list:
-    """
-    Reads all .txt files from a folder and returns a list of dictionaries.
-    Each dictionary contains the fileName and the text content.
+    """Reads all .txt files from a folder into a list of dictionaries.
+
+    Args:
+        folderPath: A pathlib.Path object pointing to the source folder.
+
+    Returns:
+        A list of dictionaries, where each dictionary has two keys:
+        'fileName' (str) and 'text' (str).
     """
     narrativeData = []
     for file in folderPath.glob("*.txt"):
@@ -24,30 +25,36 @@ def loadNarrativesFromFolder(folderPath: Path)-> list:
         })
     return narrativeData
 
-#2
-def embedNarrativeText(narrativeData: dict) -> dict:
+#2. 
+def embedNarrativeText(narrativeData: list, client) -> list:
+    """
+    This function takes a list of narratives, makes a single batch API call
+    to embed all their texts, and adds the embedding vector back into each
+    corresponding dictionary.
 
-    #loop through narrativeData, to create a list of all text strings to embed
+    Args:
+        narrativeData: A list of dictionaries, where each dict has at least a 'text' key.
+        client: The initialized Gemini API client.
+
+    Returns:
+        The same list of dictionaries, now with an 'embedding' key added to each one.
+    """
+    #create a list of all text strings to embed
     toEmbed = []
     for narrative in narrativeData:
         toEmbed.append(narrative['text'])
 
-    # make 1 api call to embed the entire list of texts - 
-    # (you'll get back a list of all embeddings in the same order)
+    # single api call to embed the entire list texts
     result = client.models.embed_content(
-    model="gemini-embedding-001",
-    contents=toEmbed
+        model="gemini-embedding-001",
+        contents=toEmbed
     )
 
     # list of the vectors from the result
     embeddings = []
-
     for embedding in result.embeddings: # Loop through each embedding returned by the API
-
-        # Get the list of embedding values from the object
-        vectors = embedding.values
-        # Add that list of numbers to our list
-        embeddings.append(vectors)
+        vectors = embedding.values # Get the list of embedding values from the object
+        embeddings.append(vectors) # Add that list of numbers to our list
     
     # Loop through the orignal data and new embeddings together
     for narrative, embedding in zip(narrativeData, embeddings):
@@ -57,10 +64,18 @@ def embedNarrativeText(narrativeData: dict) -> dict:
     return narrativeData
 
 #3
-def buildCache(narrativeData: dict):
-    with open('embeddingsCache.json', "w") as fp:
-        json.dump(narrativeData, fp)
-    return None
+def buildCache(narrativeData: list, cachePath: Path) -> None:
+    """Serializes and saves the narrative data to a JSON cache file.
+
+    Args:
+        narrativeData: The list of narrative dictionaries to save.
+        cachePath: A pathlib.Path object for the output JSON file.
+    """
+    print(f"Saving index to cache file: {cachePath.name}...")
+    with open(cachePath, "w") as f:
+        # Use indent=4 to make the JSON file human-readable
+        json.dump(narrativeData, f, indent=4)
+    print("\n-> Save complete.")
 
 if __name__ == "__main__":
     sampleDataDirectory = Path('./sampleNarratives')
