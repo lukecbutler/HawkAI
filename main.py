@@ -4,7 +4,10 @@ from pathlib import Path
 from google import genai
 
 def run():
-    USER_QUERY = 'Structure in Society'
+    #class in society => [2.3,44.3,33.5]
+    USER_QUERY = 'equal pay among genders' 
+
+
     client = genai.Client()
 
     # pull cache file (ie. Narrative database)
