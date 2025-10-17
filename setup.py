@@ -3,7 +3,7 @@ from pathlib import Path
 from google import genai
 import json
 
-client = genai.Client()
+
 
 #1.
 def loadNarrativesFromFolder(folderPath: Path)-> list:
@@ -20,7 +20,7 @@ def loadNarrativesFromFolder(folderPath: Path)-> list:
     for file in folderPath.glob("*.txt"):
         # For each file, create a dictionary and append it to the list
         narrativeData.append({
-            'fileName': file.name,
+            #'fileName': file.name
             'text': file.read_text(encoding="utf-8", errors="ignore")
         })
     return narrativeData
@@ -79,7 +79,20 @@ def buildCache(narrativeData: list, cachePath: Path) -> None:
 
 
 if __name__ == "__main__":
-    sampleDataDirectory = Path('./sampleNarratives')
+    # Create client
+    client = genai.Client()
+
+    # Create path object - to sample narratives
+    sampleDataDirectory = Path('./sampleNarratives') # cache path
+
+    # pull narratives
     narrativeData = loadNarrativesFromFolder(sampleDataDirectory)
-    narrativeDictionaryWithEmbeddings = embedNarrativeText(narrativeData)
-    buildCache(narrativeDictionaryWithEmbeddings)
+
+    # create narrative embeddings key
+    narrativeDictionaryWithEmbeddings = embedNarrativeText(narrativeData, client=client)
+    
+
+    # build path object to dump to
+    embeddingCache = Path('./embeddingCache.json')
+    # dump dictionary to json
+    buildCache(narrativeDictionaryWithEmbeddings, embeddingCache)
