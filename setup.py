@@ -2,6 +2,8 @@
 from pathlib import Path
 from google import genai
 import json
+import docx
+import time
 
 
 
@@ -25,20 +27,40 @@ def loadNarrativesFromFolder(folderPath: Path)-> list:
         })
     return narrativeData
 
-#2. 
+def loadNarrativesFromWordDocs(folderPath: Path) -> list:
+    """
+    Reads all .docx files from a folder into a list of dictionaries.
+    Each dictionary contains the text content.
+    """
+    narrativeData = []
+    # 1. Look for .docx files instead of .txt
+    for file in folderPath.glob("*.docx"):
+        
+        # 2. Open the Word Document file
+        doc = docx.Document(file)
+        
+        # 3. Extract text from all paragraphs
+        allParagraphs = []
+        for p in doc.paragraphs:
+            allParagraphs.append(p.text)
+        
+        # 4. Join them all into a single text string, separated by newlines
+        fullText = "\n".join(allParagraphs)
+        
+        # 5. Append the dictionary, just like in your original function
+        narrativeData.append({
+            'text': fullText
+        })
+        
+    return narrativeData
+
+
+# @params: list of dictionaries; keys=['fileName', 'text']
+# @returns: dictionary with key of 'embedded' added
 def embedNarrativeText(narrativeData: list, client) -> list:
-    """
-    This function takes a list of narratives, makes a single batch API call
-    to embed all their texts, and adds the embedding vector back into each
-    corresponding dictionary.
-
-    Args:
-        narrativeData: A list of dictionaries, where each dict has at least a 'text' key.
-        client: The initialized Gemini API client.
-
-    Returns:
-        The same list of dictionaries, now with an 'embedding' key added to each one.
-    """
+    '''
+    This function adds the embedded value of each text as a key to the dictionary
+    '''
     #create a list of all text strings to embed
     toEmbed = []
     for narrative in narrativeData:
@@ -46,7 +68,7 @@ def embedNarrativeText(narrativeData: list, client) -> list:
 
     # single api call to embed the entire list texts
     result = client.models.embed_content(
-        model="gemini-embedding-001",
+        model="gemini-embedding-001", # You might want to update this to "embedding-001"
         contents=toEmbed
     )
 
@@ -55,13 +77,14 @@ def embedNarrativeText(narrativeData: list, client) -> list:
     for embedding in result.embeddings: # Loop through each embedding returned by the API
         vectors = embedding.values # Get the list of embedding values from the object
         embeddings.append(vectors) # Add that list of numbers to our list
-    
+
     # Loop through the orignal data and new embeddings together
     for narrative, embedding in zip(narrativeData, embeddings):
         # Add the 'embedding' key to each existing dictionary
         narrative['embedding'] = embedding
 
     return narrativeData
+
 
 #3
 def buildCache(narrativeData: list, cachePath: Path) -> None:
@@ -79,20 +102,19 @@ def buildCache(narrativeData: list, cachePath: Path) -> None:
 
 
 if __name__ == "__main__":
-    # Create client
+
     client = genai.Client()
 
-    # Create path object - to sample narratives
-    sampleDataDirectory = Path('./sampleNarratives') # cache path
+    #build word doc folder path
+    wordDocs = Path("./wordNarrativeB")
 
-    # pull narratives
-    narrativeData = loadNarrativesFromFolder(sampleDataDirectory)
+    # create dictionary
+    narrativeDictionary = loadNarrativesFromWordDocs(folderPath=wordDocs)
 
     # create narrative embeddings key
-    narrativeDictionaryWithEmbeddings = embedNarrativeText(narrativeData, client=client)
-    
+    narrativeDictionaryWithEmbeddings = embedNarrativeText(narrativeData=narrativeDictionary, client=client)
 
-    # build path object to dump to
-    embeddingCache = Path('./embeddingCache.json')
-    # dump dictionary to json
-    buildCache(narrativeDictionaryWithEmbeddings, embeddingCache)
+    #path to dump json file of embeddings
+    pathToDump = Path("./wordDatabaseToCompile/wordNarrativesEmbeddingB")
+
+    buildCache(narrativeData=narrativeDictionary, cachePath=pathToDump)

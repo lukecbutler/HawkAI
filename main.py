@@ -25,4 +25,23 @@ def run():
 def main():
     print(run())
 
-main()
+def buildEmbeddingCache():
+    # Create client
+    client = genai.Client()
+
+    # Create path object - to sample narratives
+    sampleDataDirectory = Path('./NarrativeDatabase/wordFilesProcessedv2') # cache path
+
+    # pull narratives
+    narrativeData = loadNarrativesFromFolder(sampleDataDirectory)
+
+    # create narrative embeddings key
+    narrativeDictionaryWithEmbeddings = embedNarrativeText(narrativeData, client=client)
+
+    # build path object to dump to
+    embeddingCache = Path('./embeddingCacheWord.json')
+
+    # dump dictionary to json
+    buildCache(narrativeDictionaryWithEmbeddings, embeddingCache)
+
+buildEmbeddingCache()
