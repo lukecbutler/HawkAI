@@ -3,58 +3,37 @@ from pathlib import Path
 from google import genai
 import json
 import docx
-import time
 
+# --- Helper Functions ---
 
-
-#1.
-def loadNarrativesFromFolder(folderPath: Path)-> list:
-    """Reads all .txt files from a folder into a list of dictionaries.
-
-    Args:
-        folderPath: A pathlib.Path object pointing to the source folder.
-
-    Returns:
-        A list of dictionaries, where each dictionary has two keys:
-        'fileName' (str) and 'text' (str).
-    """
-    narrativeData = []
-    for file in folderPath.glob("*.txt"):
-        # For each file, create a dictionary and append it to the list
-        narrativeData.append({
-            #'fileName': file.name
-            'text': file.read_text(encoding="utf-8", errors="ignore")
-        })
-    return narrativeData
-
+#1. Load Word Docs
 def loadNarrativesFromWordDocs(folderPath: Path) -> list:
     """
     Reads all .docx files from a folder into a list of dictionaries.
-    Each dictionary contains the text content.
     """
     narrativeData = []
-    # 1. Look for .docx files instead of .txt
-    for file in folderPath.glob("*.docx"):
-        
-        # 2. Open the Word Document file
-        doc = docx.Document(file)
-        
-        # 3. Extract text from all paragraphs
-        allParagraphs = []
-        for p in doc.paragraphs:
-            allParagraphs.append(p.text)
-        
-        # 4. Join them all into a single text string, separated by newlines
-        fullText = "\n".join(allParagraphs)
-        
-        # 5. Append the dictionary, just like in your original function
-        narrativeData.append({
-            'text': fullText
-        })
-        
+    print(f"Loading narratives from: {folderPath}")
+    filesFound = list(folderPath.glob("*.docx")) # Get a count upfront
+
+    if not filesFound:
+        print("❌ Error: No .docx files found in the specified folder.")
+        return [] # Return empty list if no files
+
+    print(f"Found {len(filesFound)} .docx files. Reading content...")
+    for file in filesFound:
+        try:
+            doc = docx.Document(file)
+            allParagraphs = [p.text for p in doc.paragraphs]
+            fullText = "\n".join(allParagraphs)
+            narrativeData.append({'text': fullText})
+        except Exception as e:
+            print(f"  ⚠️ Warning: Could not read file {file.name}. Error: {e}. Skipping.")
+
+    print(f"Successfully loaded content from {len(narrativeData)} files.")
     return narrativeData
 
 
+#2.
 # @params: list of dictionaries; keys=['fileName', 'text']
 # @returns: dictionary with key of 'embedded' added
 def embedNarrativeText(narrativeData: list, client) -> list:
@@ -86,35 +65,25 @@ def embedNarrativeText(narrativeData: list, client) -> list:
     return narrativeData
 
 
-#3
+#3. Build Cache
 def buildCache(narrativeData: list, cachePath: Path) -> None:
-    """Serializes and saves the narrative data to a JSON cache file.
+    """Serializes and saves the narrative data to a JSON cache file."""
+    if not narrativeData:
+        print("No data to save to cache.")
+        return
 
-    Args:
-        narrativeData: The list of narrative dictionaries to save.
-        cachePath: A pathlib.Path object for the output JSON file.
-    """
-    print(f"Saving index to cache file: {cachePath.name}...")
-    with open(cachePath, "w") as f:
-        # Use indent=4 to make the JSON file human-readable
-        json.dump(narrativeData, f, indent=4)
-    print("\n-> Save complete.")
+    # Ensure the parent directory exists
+    cachePath.parent.mkdir(parents=True, exist_ok=True)
+
+    print(f"\nSaving index to cache file: {cachePath}...")
+    try:
+        with open(cachePath, "w") as f:
+            json.dump(narrativeData, f, indent=4)
+        print("✅ Save complete.")
+    except Exception as e:
+        print(f"❌ Error saving cache file: {e}")
 
 
+# --- Main Execution Block ---
 if __name__ == "__main__":
-
-    client = genai.Client()
-
-    #build word doc folder path
-    wordDocs = Path("./wordNarrativeB")
-
-    # create dictionary
-    narrativeDictionary = loadNarrativesFromWordDocs(folderPath=wordDocs)
-
-    # create narrative embeddings key
-    narrativeDictionaryWithEmbeddings = embedNarrativeText(narrativeData=narrativeDictionary, client=client)
-
-    #path to dump json file of embeddings
-    pathToDump = Path("./wordDatabaseToCompile/wordNarrativesEmbeddingB")
-
-    buildCache(narrativeData=narrativeDictionary, cachePath=pathToDump)
+    pass

@@ -13,41 +13,7 @@ output:
 objective 1: Strip personal information from all student narratives [√]
 objective 2: Match sociological concept (ie. the user query) to most relative narrative []
 objective 3: Input information into Gemini API[√]
-objective 3.5: HawkAI run 500+ embedded articles []
-
-    ## Word Section ##
-    1. Split into 5 secions, by last name for embedding (e.g section 1 is a - d, etc.)
-        A[]
-        B[]
-        C[]
-        D[]
-        E[]
-        F[]
-        G[]
-        H[]
-        I[]
-        J[]
-        K[]
-        L[]
-        M[]
-        N[]
-        O[]
-        P[]
-        Q[]
-        R[]
-        S[]
-        T[]
-        U[]
-        V[]
-        W[]
-        X[]
-        Y[]
-        Z[]
-
-    2. Embed the sections using gemini
-    3. Manually copy over the embeddings to a main database file
-
-
+objective 3.5: HawkAI run's all articles []
 objective 4: Change summary & concept to bullet points - summary: 3; concept: 4[]
 objective 5: If a similarity score is to low, still relate back to most alike narrative, but give preview of synthetic narrative[]
 
