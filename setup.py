@@ -3,6 +3,8 @@ from pathlib import Path
 from google import genai
 import json
 import docx
+import fitz # PyMuPDF
+
 
 # --- Helper Functions ---
 
@@ -32,7 +34,41 @@ def loadNarrativesFromWordDocs(folderPath: Path) -> list:
     print(f"Successfully loaded content from {len(narrativeData)} files.")
     return narrativeData
 
+def loadNarrativesFromPDFs(folderPath: Path) -> list:
+    """
+    Reads all .pdf files from a folder into a list of dictionaries.
+    Each dictionary contains the extracted text content.
+    """
+    narrativeData = []
+    print(f"Loading narratives from PDF files in: {folderPath}")
+    # 1. Look for .pdf files
+    filesFound = list(folderPath.glob("*.pdf"))
 
+    if not filesFound:
+        print("❌ Error: No .pdf files found in the specified folder.")
+        return []
+
+    print(f"Found {len(filesFound)} .pdf files. Reading content...")
+    for file in filesFound:
+        fullText = "" # Initialize empty string for this file's text
+        try:
+            # 2. Open the PDF document using fitz
+            doc = fitz.open(file)
+            # 3. Loop through each page in the PDF
+            for page in doc:
+                # 4. Extract text from the page and add it to the string
+                fullText += page.get_text() + "\n" # Add newline between pages
+            doc.close() # Close the document
+
+            # 5. Append the dictionary with the extracted text
+            narrativeData.append({'text': fullText.strip()}) # Remove leading/trailing whitespace
+
+        except Exception as e:
+            # Handle potential errors opening or reading the PDF
+            print(f"  ⚠️ Warning: Could not read PDF file {file.name}. Error: {e}. Skipping.")
+
+    print(f"Successfully loaded content from {len(narrativeData)} PDF files.")
+    return narrativeData
 #2.
 # @params: list of dictionaries; keys=['fileName', 'text']
 # @returns: dictionary with key of 'embedded' added
@@ -89,6 +125,22 @@ if __name__ == "__main__":
 
     client = genai.Client()
     ''''''
+    CURRENT_PDF_PATH = Path('./splitBatches/pdfBatch2')
+    CURRENT_EMBEDDING_PATH = Path('./batchPDFEmbeddings/PDFEmbedding2.json')
+    ''''''
+    
+    # set path 
+    listOfNarrativeDictionaries = loadNarrativesFromPDFs(CURRENT_PDF_PATH)
+
+    # embed
+    listOfNarrativeDictionariesWithEmbedding = embedNarrativeText(listOfNarrativeDictionaries, client=client)
+
+    # dump to JSON
+    buildCache(listOfNarrativeDictionariesWithEmbedding, CURRENT_EMBEDDING_PATH)
+
+    # build embedding files
+    '''
+    ''''''
     CURRENT_WORD_PATH = Path('./splitBatches/wordNarrativeT-Z')
     CURRENT_EMBEDDING_PATH = Path('./batchWordEmbeddings/wordEmbeddingT-Z.json')
     ''''''
@@ -103,3 +155,4 @@ if __name__ == "__main__":
 
     # dump to JSON
     buildCache(listOfNarrativeDictionariesWithEmbedding, CURRENT_EMBEDDING_PATH)
+    '''

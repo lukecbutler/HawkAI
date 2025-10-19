@@ -128,11 +128,11 @@ def generateFinalOutput(userConcept: str, narrativeText: str, client) -> str:
     Find a single, powerful passage of 3 to 5 sentences from the narrative where the author expresses the feelings or experiences most relevant to the concept. Quote it word-for-word.
 
     **Summary:**
-    Write a brief summary of the narrative that provides the necessary context to understand the emotional weight of the quote.
+    Write a brief summary of the narrative that provides the necessary context to understand the emotional weight of the quote. Format this summary as exactly 3 bullet points.
 
     **Concept:**
-    Provide a clear, academic description of the sociological concept '{userConcept}'.
-    """
+    Provide a clear, academic description of the sociological concept '{userConcept}'. Format this description as exactly 4 bullet points.
+    """ 
     
     try:
         # 2. Call the generative model.
@@ -155,7 +155,7 @@ if __name__ == "__main__":
     client = genai.Client()
 
     # pull cache file (ie. Narrative database)
-    database = Path("./entireWordDBEmbeddings.json")
+    database = Path("./narrativeEmbeddingsDbFinal.json")
     searchIndex = loadJSONIndexFromCache(cacheFile=database)
     
     # embed the query
