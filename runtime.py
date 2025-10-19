@@ -50,7 +50,7 @@ def embedUserQuery(userQuery: str, client) -> list:
     return embed_query.embeddings[0].values
 
 
-#3
+
 def findNarrativeUsingDotProduct(embeddedQuery: list, searchIndex: list) -> str:
     """
     Finds the most relevant narrative by calculating the dot product
@@ -89,6 +89,8 @@ def findNarrativeUsingDotProduct(embeddedQuery: list, searchIndex: list) -> str:
 
     # 5. Return the text of that narrative.
     return bestNarrative['text']
+
+
 
 
 #4. Construct output
@@ -153,8 +155,8 @@ if __name__ == "__main__":
     client = genai.Client()
 
     # pull cache file (ie. Narrative database)
-    cacheFile = Path("./embeddingsCache.json")
-    searchIndex = loadJSONIndexFromCache(cacheFile=cacheFile)
+    database = Path("./batchWordEmbeddings/wordEmbeddingA.json")
+    searchIndex = loadJSONIndexFromCache(cacheFile=database)
     
     # embed the query
     embeddedQuery = embedUserQuery(userQuery=USER_QUERY, client=client)
