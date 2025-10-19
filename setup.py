@@ -89,8 +89,8 @@ if __name__ == "__main__":
 
     client = genai.Client()
     ''''''
-    CURRENT_WORD_PATH = Path('./splitBatches/wordNarrativeC')
-    CURRENT_EMBEDDING_PATH = Path('./batchWordEmbeddings/wordEmbeddingC.json')
+    CURRENT_WORD_PATH = Path('./splitBatches/wordNarrativeT-Z')
+    CURRENT_EMBEDDING_PATH = Path('./batchWordEmbeddings/wordEmbeddingT-Z.json')
     ''''''
 
     # set path 
