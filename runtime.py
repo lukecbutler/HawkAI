@@ -155,7 +155,7 @@ if __name__ == "__main__":
     client = genai.Client()
 
     # pull cache file (ie. Narrative database)
-    database = Path("./batchWordEmbeddings/wordEmbeddingA.json")
+    database = Path("./entireWordDBEmbeddings.json")
     searchIndex = loadJSONIndexFromCache(cacheFile=database)
     
     # embed the query
