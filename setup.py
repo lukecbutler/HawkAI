@@ -86,4 +86,20 @@ def buildCache(narrativeData: list, cachePath: Path) -> None:
 
 # --- Main Execution Block ---
 if __name__ == "__main__":
-    pass
+
+    client = genai.Client()
+    ''''''
+    CURRENT_WORD_PATH = Path('./splitBatches/wordNarrativeC')
+    CURRENT_EMBEDDING_PATH = Path('./batchWordEmbeddings/wordEmbeddingC.json')
+    ''''''
+
+    # set path 
+    listOfNarrativeDictionaries = loadNarrativesFromWordDocs(CURRENT_WORD_PATH)
+
+
+    # embed
+    listOfNarrativeDictionariesWithEmbedding = embedNarrativeText(listOfNarrativeDictionaries ,client=client)
+
+
+    # dump to JSON
+    buildCache(listOfNarrativeDictionariesWithEmbedding, CURRENT_EMBEDDING_PATH)
