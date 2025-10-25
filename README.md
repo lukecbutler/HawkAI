@@ -13,9 +13,12 @@ output:
 objective 1: Strip personal information from all student narratives [√]
 objective 2: Match sociological concept (ie. the user query) to most relative narrative []
 objective 3: Input information into Gemini API[√]
-objective 3.5: HawkAI run's all articles []
-objective 4: Change summary & concept to bullet points - summary: 3; concept: 4[]
+objective 3.5: HawkAI run's all articles [v]
+objective 4: Change summary & concept to bullet points - summary: 3; concept: 4[v]
 objective 5: If a similarity score is to low, still relate back to most alike narrative, but give preview of synthetic narrative[]
+    create similarity score off of dot product multiplication in numpy
+objective 6: Create flask or ts web app (local) using input and output - be able to provide clean looking output[]
+
 
 
 instructions:
