@@ -151,7 +151,7 @@ def generateFinalOutput(userConcept: str, narrativeText: str, client) -> str:
 
 if __name__ == "__main__":
 
-    USER_QUERY = 'Social Inequality'
+    USER_QUERY = 'Equal Pay Among Genders'
     client = genai.Client()
 
     # pull cache file (ie. Narrative database)

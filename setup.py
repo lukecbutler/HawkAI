@@ -69,6 +69,10 @@ def loadNarrativesFromPDFs(folderPath: Path) -> list:
 
     print(f"Successfully loaded content from {len(narrativeData)} PDF files.")
     return narrativeData
+
+##--- End Helper functions ---
+
+
 #2.
 # @params: list of dictionaries; keys=['fileName', 'text']
 # @returns: dictionary with key of 'embedded' added
@@ -101,7 +105,7 @@ def embedNarrativeText(narrativeData: list, client) -> list:
     return narrativeData
 
 
-#3. Build Cache
+#3. Build database out of embedded data
 def buildCache(narrativeData: list, cachePath: Path) -> None:
     """Serializes and saves the narrative data to a JSON cache file."""
     if not narrativeData:
@@ -139,20 +143,3 @@ if __name__ == "__main__":
     buildCache(listOfNarrativeDictionariesWithEmbedding, CURRENT_EMBEDDING_PATH)
 
     # build embedding files
-    '''
-    ''''''
-    CURRENT_WORD_PATH = Path('./splitBatches/wordNarrativeT-Z')
-    CURRENT_EMBEDDING_PATH = Path('./batchWordEmbeddings/wordEmbeddingT-Z.json')
-    ''''''
-
-    # set path 
-    listOfNarrativeDictionaries = loadNarrativesFromWordDocs(CURRENT_WORD_PATH)
-
-
-    # embed
-    listOfNarrativeDictionariesWithEmbedding = embedNarrativeText(listOfNarrativeDictionaries ,client=client)
-
-
-    # dump to JSON
-    buildCache(listOfNarrativeDictionariesWithEmbedding, CURRENT_EMBEDDING_PATH)
-    '''
