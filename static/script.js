@@ -1,12 +1,12 @@
 // Wait until the HTML document is fully loaded
 document.addEventListener('DOMContentLoaded', function() {
 
-    // Get references to the HTML elements we need to interact with
+    // Get html elements based on their id's
     const conceptInput = document.getElementById('conceptInput');
     const submitButton = document.getElementById('submitButton');
     const resultsOutput = document.getElementById('resultsOutput');
 
-    // Add an event listener to the button - run this function when clicked
+    // Add event listener to the button - run this function when clicked
     submitButton.addEventListener('click', function() {
 
         // 1. Get the concept typed by the user from the input field
@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // 3. Use the fetch API to send the data to our Flask backend
         fetch('/api/hawkai', {
-            method: 'POST', // Specify the method
+            method: 'POST', // Specify the post request
             headers: {
                 'Content-Type': 'application/json' // Tell the server we're sending JSON
             },
@@ -41,25 +41,23 @@ document.addEventListener('DOMContentLoaded', function() {
                 // If not okay, try to read the error message from the server's JSON response
                 return response.json().then(errorData => {
                     throw new Error(errorData.error || `Server responded with status: ${response.status}`);
-                });
+                }); // this 'throw' will trigger the '.catch()' block below
             }
-            // If okay, parse the JSON response body
+            // If 200 ok, parse the JSON response body
             return response.json();
         })
         .then(data => {
-            // 4. Display the result from the Flask API
+            // Display the result from the Flask API
             // The JSON from Flask looks like: { "result": "Quote: ... Summary: ..." }
-            // We need to handle potential line breaks in the result for HTML
-            const formattedResult = data.result.replace(/\n/g, '<br>');
+            const formattedResult = data.result.replace(/\n/g, '<br>'); // Handle potential line breaks in the result for HTML
             resultsOutput.innerHTML = formattedResult; // Update the content of the results div
         })
         .catch(error => {
-            // 5. Handle any errors that occurred during the fetch process
+            // Handle any errors that occurred during the fetch process
             console.error('Error:', error); // Log the error to the browser console
-            resultsOutput.innerHTML = `<p class="text-danger">An error occurred: ${error.message}</p>`;
+            resultsOutput.innerHTML = `<p class="text-danger">An error occurred: ${error.message}</p>`; // display user friendly error message
         })
-        .finally(() => {
-             // This always runs, whether successful or failed
+        .finally(() => { // runs at end, whether successful or not
              submitButton.disabled = false; // Re-enable the button
         });
     });

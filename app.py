@@ -35,22 +35,21 @@ def index():
 @app.route('/api/hawkai', methods=['POST'])
 def handle_hawkai_query():
     """API endpoint to process a concept and return results."""
-    if searchIndex is None:
+    if searchIndex is None: # ensure database was loaded on startup
         return jsonify({"error": "Search index not loaded"}), 500
 
-    # 1. Get concept from incoming JSON request
-    data = request.get_json()
-    userConcept = data.get('concept')
+    data = request.get_json() # get json data from js fetch request
+    userConcept = data.get('concept') # extract concept from json data
 
-    if not userConcept:
+    if not userConcept: # return error if no user concept was provided
         return jsonify({"error": "No concept provided"}), 400
 
     try:
-        # 2. Embed the query
+        # Embed the query
         print(f"Embedding query: '{userConcept}'")
-        embeddedQuery = embedUserQuery(userQuery=userConcept, client=client)
+        embeddedQuery = embedUserQuery(userQuery=userConcept, client=client) # embed user query
 
-        # 3. Find the most relevant narrative
+        # Find the most relevant narrative based on dot product
         print("Finding relevant narrative...")
         mostRelatedNarrative = findNarrativeUsingDotProduct(
             embeddedQuery=embeddedQuery,
@@ -62,7 +61,7 @@ def handle_hawkai_query():
              print(f"❌ Error during search: {mostRelatedNarrative}")
              return jsonify({"error": mostRelatedNarrative}), 500
 
-        # 4. Generate the final output
+        # Generate the final output
         print("Generating final output...")
         finalOutput = generateFinalOutput(
             userConcept=userConcept,
@@ -70,7 +69,7 @@ def handle_hawkai_query():
             client=client
         )
 
-        # 5. Return the result as JSON
+        # Return the result as JSON - containing final output string
         print("✅ Request processed successfully.")
         return jsonify({"result": finalOutput})
 
@@ -81,6 +80,5 @@ def handle_hawkai_query():
 
 # --- Run the App ---
 if __name__ == '__main__':
-    load_data() # Load data before starting the server
-    # Runs the Flask development server
-    app.run(debug=True, host='0.0.0.0', port=5001) # debug=True allows auto-reloading on code changes
+    load_data() # Load embedded database before starting the server
+    app.run(debug=True, host='0.0.0.0', port=5001)
