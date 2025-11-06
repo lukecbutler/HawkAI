@@ -11,7 +11,7 @@ def run():
     client = genai.Client()
 
     # pull cache file (ie. Narrative database)
-    database = Path("./narrativeEmbeddingsDbFinal.json")
+    database = Path("./embeddingDatabase.json")
     searchIndex = loadJSONIndexFromCache(cacheFile=database)
 
     # Check if loading the cache failed
