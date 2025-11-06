@@ -120,23 +120,23 @@ def main():
     """
     Main function to define folders and process all files.
     """
-    input_folder = Path("./originals")
-    output_folder = Path("./processed")
+    input_folder = Path("./documentNarrativeDatabase/papersToAdd/word")
+    output_folder = Path("./documentNarrativeDatabase/papersToAdd/wordProcessed")
     output_folder.mkdir(exist_ok=True)
 
     print(f"\nScanning for files in '{input_folder}'...")
 
+    '''
+    if file_path.suffix == ".pdf":
+        print(f"Processing PDF file: {file_path.name}")
+        process_pdf(file_path, output_folder)
+    '''
     for file_path in input_folder.iterdir():
-        '''
+        
         if file_path.suffix == ".docx":
             print(f"Processing DOCX file: {file_path.name}")
             process_docx(file_path, output_folder, nlp)
-        '''
 
-        if file_path.suffix == ".pdf":
-            print(f"Processing PDF file: {file_path.name}")
-            process_pdf(file_path, output_folder)
-        
         else:
             print(f"Skipping unsupported file: {file_path.name}")
     
