@@ -128,13 +128,14 @@ def buildCache(narrativeData: list, cachePath: Path) -> None:
 if __name__ == "__main__":
 
     client = genai.Client()
+
     ''''''
-    CURRENT_PDF_PATH = Path('./splitBatches/pdfBatch2')
-    CURRENT_EMBEDDING_PATH = Path('./batchPDFEmbeddings/PDFEmbedding2.json')
+    CURRENT_PDF_PATH = Path('./documentNarrativeDatabase/papersToAdd/wordProcessed')
+    CURRENT_EMBEDDING_PATH = Path('./newWordpapers.json')
     ''''''
     
     # set path 
-    listOfNarrativeDictionaries = loadNarrativesFromPDFs(CURRENT_PDF_PATH)
+    listOfNarrativeDictionaries = loadNarrativesFromWordDocs(CURRENT_PDF_PATH)
 
     # embed
     listOfNarrativeDictionariesWithEmbedding = embedNarrativeText(listOfNarrativeDictionaries, client=client)
