@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const conceptInput = document.getElementById('conceptInput');
     const submitButton = document.getElementById('submitButton');
     const resultsOutput = document.getElementById('resultsOutput');
+    const similarityScoreOutput = document.getElementById('similarityScore');
 
     // Add event listener to the button - run this function when clicked
     submitButton.addEventListener('click', function() {
@@ -20,6 +21,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Show a loading message while waiting for the API
         resultsOutput.innerHTML = '<p class="text-info">Processing... Please wait.</p>';
+        similarityScoreOutput.innerHTML = ""; // Clear the old score
         submitButton.disabled = true; // Disable button during processing
 
         // 2. Prepare the data to send to the Flask API
@@ -36,9 +38,7 @@ document.addEventListener('DOMContentLoaded', function() {
             body: JSON.stringify(dataToSend) // Convert the JavaScript object to a JSON string
         })
         .then(response => {
-            // Check if the server responded successfully (status code 200-299)
             if (!response.ok) {
-                // If not okay, try to read the error message from the server's JSON response
                 return response.json().then(errorData => {
                     throw new Error(errorData.error || `Server responded with status: ${response.status}`);
                 }); // this 'throw' will trigger the '.catch()' block below
@@ -47,15 +47,23 @@ document.addEventListener('DOMContentLoaded', function() {
             return response.json();
         })
         .then(data => {
-            // Display the result from the Flask API
-            // The JSON from Flask looks like: { "result": "Quote: ... Summary: ..." }
-            const formattedResult = data.result.replace(/\n/g, '<br>'); // Handle potential line breaks in the result for HTML
-            resultsOutput.innerHTML = formattedResult; // Update the content of the results div
+            // data object looks like: { "result": "...", "score": 0.85 }
+
+            // 1. Get the AI-generated text (a string)
+            const formattedResult = data.result.replace(/\n/g, '<br>');
+            
+            // 2. Get the score (a number) and format it
+            const formattedScore = data.score.toFixed(4);
+
+            // 3. Populate the two divs separately
+            resultsOutput.innerHTML = formattedResult;
+            similarityScoreOutput.innerHTML = formattedScore;
         })
         .catch(error => {
             // Handle any errors that occurred during the fetch process
             console.error('Error:', error); // Log the error to the browser console
             resultsOutput.innerHTML = `<p class="text-danger">An error occurred: ${error.message}</p>`; // display user friendly error message
+            similarityScoreOutput.innerHTML = '<p class="text-danger">Error</p>'; // Also update score div on error
         })
         .finally(() => { // runs at end, whether successful or not
              submitButton.disabled = false; // Re-enable the button

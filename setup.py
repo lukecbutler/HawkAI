@@ -6,7 +6,7 @@ import docx
 import fitz # PyMuPDF
 
 
-# --- Helper Functions ---
+''' This file extracts text from word & pdf documents, and creates JSON with the file text and it's embedding text'''
 
 #1. Load Word Docs
 def loadNarrativesFromWordDocs(folderPath: Path) -> list:

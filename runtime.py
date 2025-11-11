@@ -3,6 +3,8 @@ from google import genai
 import numpy as np
 import json
 
+'''This file takes the text & embedding text database, embedds the user query, 
+finds the most similar narrative, and generates output using gemini flash'''
 
 # 1.
 def loadJSONIndexFromCache(cacheFile: Path) -> list:
@@ -50,48 +52,54 @@ def embedUserQuery(userQuery: str, client) -> list:
     return embed_query.embeddings[0].values
 
 
+# In runtime.py
 
-def findNarrativeUsingDotProduct(embeddedQuery: list, searchIndex: list) -> str:
+def findNarrativeUsingDotProduct(embeddedQuery: list, searchIndex: list): # Note: No -> str return type
     """
-    Finds the most relevant narrative by calculating the dot product
-    between a concept embedding and all narrative embeddings in the index.
+    Finds the most relevant narrative and its similarity score.
+    Filters out narratives with missing or invalid embeddings.
 
     Args:
         embeddedQuery: A list of floats representing the query vector.
-        searchIndex: A list of dictionaries, where each dict contains a narrative's
-                     text and its corresponding 'embedding' vector.
+        searchIndex: A list of dictionaries, where each dict *should* contain
+                     a narrative's text and its corresponding 'embedding' vector.
 
     Returns:
-        The text of the most similar narrative as a string, or an empty string if not found.
+        A tuple of (narrative_text, score) on success.
+        A tuple of (error_string, None) on failure.
     """
 
     # 1. Extract all the narrative embeddings from the search index
-    # Create an empty list to hold the embeddings.
     narrativeEmbeddings = []
+    originalTexts = [] # Keep a parallel list of the text
 
-    #Loop through each narrative dictionary in the searchIndex.
     for narrative in searchIndex:
+        embedding = narrative.get('embedding')
+        # Check if the embedding exists AND is a list (a valid vector)
+        if embedding is not None and isinstance(embedding, list):
+            narrativeEmbeddings.append(embedding)
+            originalTexts.append(narrative['text'])
 
-        # Get the embedding vector from the dictionary
-        embedding = narrative['embedding']
-
-        # Add that vector to our new list
-        narrativeEmbeddings.append(embedding)
+    if not narrativeEmbeddings:
+        return "Error: No valid narrative embeddings found in the search index.", None
 
     # 2. Use numpy's dot product to calculate all similarity scores at once.
-    similarityScores = np.dot(embeddedQuery, np.transpose(narrativeEmbeddings))
-    print(np.argmax(similarityScores))
+    try:
+        similarityScores = np.dot(embeddedQuery, np.transpose(narrativeEmbeddings))
+    except ValueError as e:
+        return f"Error: Dot product failed. Check embedding dimensions. {e}", None
 
-    # 3. Find the index (position) of the highest score in the results
+    # 3. Find the index (position) of the highest score.
     bestNarrativeIndex = np.argmax(similarityScores)
 
-    # 4. Use that index to get the winning narrative dictionary from the searchIndex
-    bestNarrative = searchIndex[bestNarrativeIndex]
+    # 4. Get the actual score value from that index.
+    bestScore = similarityScores[bestNarrativeIndex]
 
-    # 5. Return the text of that narrative.
-    return bestNarrative['text']
+    # 5. Use that index to get the corresponding text.
+    bestNarrativeText = originalTexts[bestNarrativeIndex]
 
-
+    # 6. Return BOTH the text and the score as a tuple.
+    return bestNarrativeText, bestScore
 
 
 #4. Construct output

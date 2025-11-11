@@ -3,7 +3,6 @@ from runtime import loadJSONIndexFromCache, embedUserQuery, findNarrativeUsingDo
 # Note: You don't actually need anything from setup.py here
 from pathlib import Path
 from google import genai
-
 def run():
     """Contains the core logic for running the AI query."""
 
@@ -23,20 +22,29 @@ def run():
     print(f"\nEmbedding the query: '{USER_QUERY}'...")
     embeddedQuery = embedUserQuery(userQuery=USER_QUERY, client=client)
 
-    # match the embedded query to the embedded narrative
+    # --- THIS IS THE UPDATED SECTION ---
     print("Finding the most relevant narrative...")
-    mostRelatedNarrativeToQuery = findNarrativeUsingDotProduct(embeddedQuery=embeddedQuery, searchIndex=searchIndex)
+    # 1. Unpack the tuple into two separate variables
+    mostRelatedNarrativeToQuery, score = findNarrativeUsingDotProduct(
+        embeddedQuery=embeddedQuery,
+        searchIndex=searchIndex
+    )
 
-    # Check if the search returned an error message
-    if mostRelatedNarrativeToQuery.startswith("Error:"):
+    # 2. Update the error check to look at the 'score' variable
+    if score is None:
+        # The 'mostRelatedNarrativeToQuery' variable now holds the error message
         print(f"❌ {mostRelatedNarrativeToQuery}")
         return mostRelatedNarrativeToQuery # Return the error message
+    # --- END UPDATED SECTION ---
+
+    # (Optional) You can print the score for debugging here
+    print(f"  -> Found narrative with score: {score:.4f}")
 
     # generate the final output
     print("Generating the final output...")
+    # This line now works correctly, as 'mostRelatedNarrativeToQuery' holds only the text
     finalOutput = generateFinalOutput(USER_QUERY, mostRelatedNarrativeToQuery, client)
 
-    # --- FIX 1: Return the output string ---
     return finalOutput
 
 

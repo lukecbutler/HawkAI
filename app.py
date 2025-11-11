@@ -31,7 +31,6 @@ def load_data():
 def index():
     """Serves the main HTML page."""
     return render_template('index.html')
-
 @app.route('/api/hawkai', methods=['POST'])
 def handle_hawkai_query():
     """API endpoint to process a concept and return results."""
@@ -49,35 +48,42 @@ def handle_hawkai_query():
         print(f"Embedding query: '{userConcept}'")
         embeddedQuery = embedUserQuery(userQuery=userConcept, client=client) # embed user query
 
+        # --- 1. UNPACK THE TUPLE ---
         # Find the most relevant narrative based on dot product
         print("Finding relevant narrative...")
-        mostRelatedNarrative = findNarrativeUsingDotProduct(
+        mostRelatedNarrative, score = findNarrativeUsingDotProduct(
             embeddedQuery=embeddedQuery,
             searchIndex=searchIndex
         )
+        # --- END CHANGE ---
 
-        # Check if findNarrative returned an error string
-        if isinstance(mostRelatedNarrative, str) and mostRelatedNarrative.startswith("Error:"):
+        # --- 2. UPDATE THE ERROR CHECK ---
+        # Check if the score is None, which indicates an error
+        if score is None:
+             # mostRelatedNarrative now holds the error message
              print(f"❌ Error during search: {mostRelatedNarrative}")
              return jsonify({"error": mostRelatedNarrative}), 500
+        # --- END CHANGE ---
 
         # Generate the final output
         print("Generating final output...")
         finalOutput = generateFinalOutput(
             userConcept=userConcept,
-            narrativeText=mostRelatedNarrative,
+            narrativeText=mostRelatedNarrative, # Pass only the text
             client=client
         )
 
+        # --- 3. USE THE REAL SCORE VARIABLE ---
         # Return the result as JSON - containing final output string
         print("✅ Request processed successfully.")
-        return jsonify({"result": finalOutput})
+        return jsonify({"result": finalOutput, "score": score}) # Use the variable 'score'
+        # --- END CHANGE ---
 
     except Exception as e:
         print(f"❌ An unexpected error occurred: {e}")
         # Log the full error in a real application
         return jsonify({"error": "An internal server error occurred"}), 500
-
+    
 # --- Run the App ---
 if __name__ == '__main__':
     load_data() # Load embedded database before starting the server
