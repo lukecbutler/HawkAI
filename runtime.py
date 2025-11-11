@@ -80,6 +80,7 @@ def findNarrativeUsingDotProduct(embeddedQuery: list, searchIndex: list) -> str:
 
     # 2. Use numpy's dot product to calculate all similarity scores at once.
     similarityScores = np.dot(embeddedQuery, np.transpose(narrativeEmbeddings))
+    print(np.argmax(similarityScores))
 
     # 3. Find the index (position) of the highest score in the results
     bestNarrativeIndex = np.argmax(similarityScores)
@@ -148,20 +149,3 @@ def generateFinalOutput(userConcept: str, narrativeText: str, client) -> str:
         # Handle potential API errors
         print(f"❌ An error occurred during AI generation: {e}")
         return "Sorry, an error occurred while generating the response."
-
-if __name__ == "__main__":
-
-    USER_QUERY = 'Equal Pay Among Genders'
-    client = genai.Client()
-
-    # pull cache file (ie. Narrative database)
-    database = Path("./narrativeEmbeddingsDbFinal.json")
-    searchIndex = loadJSONIndexFromCache(cacheFile=database)
-    
-    # embed the query
-    embeddedQuery = embedUserQuery(userQuery=USER_QUERY, client=client)
-
-    # match the embeded query to the embedded narrative
-    mostRelatedNarrativeToQuery = findNarrativeUsingDotProduct(embeddedQuery=embeddedQuery, searchIndex=searchIndex)
-    
-    print(generateFinalOutput(USER_QUERY, mostRelatedNarrativeToQuery, client))
