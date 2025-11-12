@@ -134,7 +134,7 @@ def generateFinalOutput(userConcept: str, narrativeText: str, client) -> str:
     Based on the provided concept and narrative, generate a response with exactly these three parts, formatted as follows:
 
     Quote from Student Narrative:
-    Pull from the personal narrative, a section that includes a peronsal story that could be akin to the user concept.
+    Can you find the paragraph in this narrative that uses an emotional personal experience that could be better understood using the sociological concept that the paper introduces?
 
     Brief Summary of Narrative:
     Write a brief summary of the narrative that provides the necessary context to understand the emotional weight of the quote. Format this summary as exactly 3 bullet points.
