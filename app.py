@@ -1,4 +1,3 @@
-import json
 from pathlib import Path
 from flask import Flask, render_template, request, jsonify
 from google import genai

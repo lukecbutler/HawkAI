@@ -135,6 +135,7 @@ def generateFinalOutput(userConcept: str, narrativeText: str, client) -> str:
 
     Quote from Student Narrative:
     Find a single, powerful passage of 3 to 5 sentences from the narrative where the author expresses the feelings or experiences most relevant to the concept. Quote it word-for-word.
+    Provide a single bullet point for the user when formating the output.
 
     Brief Summary of Narrative:
     Write a brief summary of the narrative that provides the necessary context to understand the emotional weight of the quote. Format this summary as exactly 3 bullet points.
@@ -146,7 +147,7 @@ def generateFinalOutput(userConcept: str, narrativeText: str, client) -> str:
     try:
         # 2. Call the generative model.
         response = client.models.generate_content(
-            model="gemini-2.5-flash",
+            model="gemini-2.5-pro",
             contents=prompt
         )
         
