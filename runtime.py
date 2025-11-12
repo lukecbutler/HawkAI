@@ -134,16 +134,15 @@ def generateFinalOutput(userConcept: str, narrativeText: str, client) -> str:
     Based on the provided concept and narrative, generate a response with exactly these three parts, formatted as follows:
 
     Quote from Student Narrative:
-    Find a single, powerful passage (3-5 sentences) from the narrative that is a personal story or anecdote about the author's own feelings or experiences. This passage should be the best example* of the sociological concept in action.
-    Do NOT quote the part of the narrative that gives an academic definition of the concept. Find the personal story. Quote it word-for-word.
-    
+    Find a single, powerful passage of 3 to 5 sentences from the narrative where the author expresses the feelings or experiences most relevant to the concept. Quote it word-for-word.
+
     Brief Summary of Narrative:
     Write a brief summary of the narrative that provides the necessary context to understand the emotional weight of the quote. Format this summary as exactly 3 bullet points.
 
     Description of Sociological Concept:
-    Provide a clear, academic description of the sociological concept '{userConcept}'. Apply this concept to the quote. Format this description as exactly 4 bullet points.
+    Provide a clear, academic description of the sociological concept '{userConcept}'. Format this description as exactly 4 bullet points.
     """ 
-    
+
     try:
         # 2. Call the generative model.
         response = client.models.generate_content(
