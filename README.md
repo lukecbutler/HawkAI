@@ -16,10 +16,12 @@ objective 3: Input information into Gemini API[√]
 objective 3.5: HawkAI run's all articles [√]
 objective 4: Change summary & concept to bullet points - summary: 3; concept: 4[√]
 objective 5: Create flask or ts web app (local) using input and output - be able to provide clean looking output[√]
-objective 6: If a similarity score is to low, still relate back to most alike narrative, but give preview of synthetic narrative[]
+objective 6: If a similarity score is to low, still relate back to most alike narrative, but give preview of synthetic narrative[√]
     create similarity score off of dot product multiplication in numpy - taking all the keyword, creating a story, presenting it to the user
 
-objective 6.5: provide examples of sociological concepts on the website
+objective 6.5: provide examples of sociological concepts on the website[√]
+obj: Link back summary to quote - create intermingled response of user prompt[]
+obj(?): Create genai quote experience, if there is no true experience in the narrative[]
 
 objective 7: Be able to show software on raspberry pi[] - final deliverable
 
