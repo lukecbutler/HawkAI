@@ -42,12 +42,14 @@ def embedUserQuery(userQuery: str, client) -> list:
     Returns:
         A list of floats representing the embedding vector for the query.
     """
+    finalQuery = "Experience of " + userQuery
+
     embed_query = client.models.embed_content(
 
         # Set this model to embedding as well
         model="gemini-embedding-001",
         # Contents are set to the user query
-        contents= [userQuery]
+        contents= [finalQuery]
     )
     return embed_query.embeddings[0].values
 
@@ -132,6 +134,7 @@ def generateFinalOutput(userConcept: str, narrativeText: str, client) -> str:
     ---
 
     Based on the provided concept and narrative, generate a response with exactly these three parts, formatted as follows:
+    Do NOT include acknowledgment of being asked to present these topics, e.g. Of course. Here is an explanation of the 'looking glass self' using the provided personal story.
 
     Quote from Student Narrative:
     Find a single, powerful passage of 3 to 5 sentences from the narrative where the author expresses the feelings or experiences most relevant to the concept. Quote it word-for-word.

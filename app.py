@@ -25,6 +25,8 @@ def load_data():
         exit() # Stop the app if data doesn't load
     print(f"✅ Search index loaded with {len(searchIndex)} items.")
 
+load_data()
+
 # --- Routes ---
 @app.route('/')
 def index():
