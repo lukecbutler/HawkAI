@@ -16,14 +16,12 @@ searchIndex = None # Global variable to hold the loaded index
 def load_data():
     """Loads the search index from the cache file into memory."""
     global searchIndex
-    print("Loading search index...")
     # Using your existing function from runtime.py
     searchIndex = loadJSONIndexFromCache(CACHE_FILE)
     if searchIndex is None:
         print("❌ CRITICAL ERROR: Failed to load search index. Exiting.")
         # In a real app, you might raise an exception or handle this differently
         exit() # Stop the app if data doesn't load
-    print(f"✅ Search index loaded with {len(searchIndex)} items.")
 
 load_data()
 

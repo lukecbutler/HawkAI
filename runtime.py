@@ -144,7 +144,10 @@ def generateFinalOutput(userConcept: str, narrativeText: str, client) -> str:
     Write a brief summary of the narrative that provides the necessary context to understand the emotional weight of the quote. Format this summary as exactly 3 bullet points.
 
     Description of Sociological Concept:
-    Provide a clear, academic description of the sociological concept '{userConcept}'. Format this description as exactly 4 bullet points.
+    * Bullet 1: Provide a clear, academic description of the sociological concept '{userConcept}'.
+    * Bullet 2: Continue the academic description, elaborating on the concept.
+    * Bullet 3: Begin to analyze the **Quote from Student Narrative** (the quote you selected in the first step) using the concept.
+    * Bullet 4: Continue the analysis, explaining how the concept helps to understand the author's experience in the quote.
     """ 
 
     try:
