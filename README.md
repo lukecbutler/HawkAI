@@ -1,39 +1,45 @@
-HawkAI 2.1 overview
+# 🦅 HawkAI: Sociological Concept Explorer
 
-database: 600 studdent narratives built around sociological concept
+HawkAI is a **Retrieval-Augmented Generation (RAG)** semantic search engine designed to bridge the gap between abstract academic theories and real-world human experiences.
 
-input: Sociological Concept
+Built for the **Department of Sociology**, this tool allows researchers and students to input complex sociological concepts (e.g., *"Anomie"* or *"The Bystander Effect"*) and instantly retrieve relevant, emotional personal narratives from a secure corpus of student writing.
 
-output: 
-    - quote from narrative using that concept
-    - summary of narrative using that concept
-    - description of sociological concept
+---
 
+## 🚀 Key Features
 
-objective 1: Strip personal information from all student narratives [√]
-objective 2: Match sociological concept (ie. the user query) to most relative narrative []
-objective 3: Input information into Gemini API[√]
-objective 3.5: HawkAI run's all articles [√]
-objective 4: Change summary & concept to bullet points - summary: 3; concept: 4[√]
-objective 5: Create flask or ts web app (local) using input and output - be able to provide clean looking output[√]
-objective 6: If a similarity score is to low, still relate back to most alike narrative, but give preview of synthetic narrative[√]
-    create similarity score off of dot product multiplication in numpy - taking all the keyword, creating a story, presenting it to the user
+* **Semantic Vector Search:** Uses high-dimensional vector embeddings (`embedding-001`) to find matches based on *meaning* and *sentiment*, not just keyword overlap.
+* **Context-Aware Analysis:** Retrieves the single most relevant student narrative and feeds it into **Google's Gemini 1.5 Flash** model to generate a custom analysis.
+* **Automated Pipeline:** Custom ETL (Extract, Transform, Load) scripts to ingest, clean, and embed hundreds of unstructured `.docx` and `.pdf` documents.
+* **Optimized Performance:** Implements a caching system (JSON/Pickle) to ensure sub-second query speeds on lightweight hardware (deployed on PythonAnywhere).
 
-objective 6.5: provide examples of sociological concepts on the website[√]
-obj: Link back summary to quote - create intermingled response of user prompt[]
-obj(?): Create genai quote experience, if there is no true experience in the narrative[]
+---
 
-objective 7: Be able to show software on raspberry pi[] - final deliverable
+## 🛠️ Tech Stack
 
+* **Language:** Python 3.10+
+* **AI & LLM:** Google Gemini API (`gemini-1.5-flash`, `embedding-001`)
+* **Backend:** Flask (REST API)
+* **Data Processing:** NumPy (Vector Math/Dot Product), PyMuPDF (PDF parsing), python-docx
+* **Frontend:** HTML5, Bootstrap 5, Vanilla JavaScript
+* **Deployment:** PythonAnywhere
 
+---
 
-instructions:
-Hawk AI Bot Instructions v2
-1. The user enters a prompt for helping to understand a learning concept. [√]
-2. Bot identifies a narrative in the knowledge corpus that is relevant to that concept. [√]
-3. Then generate an output with these elements:
-    a. The quote. Word for word from the identified narrative. AI finds a quotable passage (3-5 sentences, but LLM uses discretion) in the narrative where the author expresses their feelings, experiences, or insights that are most relevant to the user query (the inputted sociological concept).
+## 🧠 How It Works (The RAG Architecture)
 
-    b. Summary of the narrative that would provide the needed information so that the quote is clear.
+HawkAI operates in two distinct phases to maximize efficiency and accuracy.
 
-    c. Concept. A description of the sociological concept that the user is seeking to understand.
+### Phase 1: The "Indexer" (`setup.py`)
+1.  **Ingestion:** Scans a directory of raw student papers (Word & PDF).
+2.  **Embedding:** Sends text in batched requests to the Gemini Embedding API to generate 768-dimensional vectors.
+3.  **Caching:** Saves the text and vectors into a local database (`embeddingDatabase.json`), handling API rate limits automatically.
+
+### Phase 2: The "Runtime" (`app.py` & `runtime.py`)
+1.  **Query:** User inputs a concept (e.g., "Imposter Syndrome").
+2.  **Vector Math:** The system embeds the query and performs a **Cosine Similarity/Dot Product** calculation against the cached database.
+3.  **Retrieval:** Identifies the narrative with the highest similarity score.
+4.  **Synthesis:** Constructs a prompt with the retrieved text and instructs the LLM to:
+    * Extract a specific *personal anecdote* (quote).
+    * Summarize the context.
+    * Explain the sociological concept using the story as evidence.
