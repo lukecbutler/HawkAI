@@ -2,7 +2,7 @@
 
 HawkAI is a **Retrieval-Augmented Generation (RAG)** semantic search engine designed to bridge the gap between abstract academic theories and real-world human experiences.
 
-Built for the **Department of Sociology**, this tool allows researchers and students to input complex sociological concepts (e.g., *"Anomie"* or *"The Bystander Effect"*) and instantly retrieve relevant, emotional personal narratives from a secure corpus of student writing.
+Built for the **Department of Sociology** @UNCW, this tool allows researchers and students to input complex sociological concepts (e.g., *"Anomie"* or *"The Bystander Effect"*) and instantly retrieve relevant, emotional personal narratives from a secure corpus of student writing.
 
 ---
 
