@@ -153,7 +153,7 @@ def generateFinalOutput(userConcept: str, narrativeText: str, client) -> str:
     try:
         # 2. Call the generative model.
         response = client.models.generate_content(
-            model="gemini-2.5-flash",
+            model="gemini-2.5-pro",
             contents=prompt
         )
         
