@@ -9,7 +9,7 @@ Built for the **Department of Sociology** @UNCW, this tool allows researchers an
 ## 🚀 Key Features
 
 * **Semantic Vector Search:** Uses high-dimensional vector embeddings (`embedding-001`) to find matches based on *meaning* and *sentiment*, not just keyword overlap.
-* **Context-Aware Analysis:** Retrieves the single most relevant student narrative and feeds it into **Google's Gemini 1.5 Flash** model to generate a custom analysis.
+* **Context-Aware Analysis:** Retrieves the single most relevant student narrative and feeds it into **Google's Gemini 2.5 Pro** model to generate a custom analysis.
 * **Automated Pipeline:** Custom ETL (Extract, Transform, Load) scripts to ingest, clean, and embed hundreds of unstructured `.docx` and `.pdf` documents.
 * **Optimized Performance:** Implements a caching system (JSON/Pickle) to ensure sub-second query speeds on lightweight hardware (deployed on PythonAnywhere).
 
@@ -18,7 +18,7 @@ Built for the **Department of Sociology** @UNCW, this tool allows researchers an
 ## 🛠️ Tech Stack
 
 * **Language:** Python 3.10+
-* **AI & LLM:** Google Gemini API (`gemini-1.5-flash`, `embedding-001`)
+* **AI & LLM:** Google Gemini API (`gemini-2.5-pro`, `embedding-001`)
 * **Backend:** Flask (REST API)
 * **Data Processing:** NumPy (Vector Math/Dot Product), PyMuPDF (PDF parsing), python-docx
 * **Frontend:** HTML5, Bootstrap 5, Vanilla JavaScript
