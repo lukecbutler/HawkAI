@@ -29,25 +29,25 @@ The result is a tool that teaches sociological thinking *through the lived exper
 
 ```
 ┌─────────────────────────────────────────────────────────┐
-│                      ETL Pipeline                       │
+│                     Database Setup                      │
 │                       setup.py                          │
 │                                                         │
-│   .docx / .pdf  ──►  Text Extraction  ──►  Gemini      │
+│   .docx / .pdf  ──►  Text Extraction  ──►  Gemini       │
 │     documents         (docx, PyMuPDF)      Embedding    │
 │                                             API         │
 │                            │                            │
 │                            ▼                            │
-│                   embeddingDatabase.json                 │
-│                   (vector index cache)                   │
+│                   embeddingDatabase.json                │
+│                   (vector index cache)                  │
 └─────────────────────────────────────────────────────────┘
                              │
                              ▼
 ┌─────────────────────────────────────────────────────────┐
-│                   Runtime Pipeline                       │
+│                   Runtime Pipeline                      │
 │                     runtime.py                          │
 │                                                         │
 │   User Query  ──►  Embed Query  ──►  Dot-Product        │
-│                     (Gemini)         Similarity          │
+│                     (Gemini)         Similarity         │
 │                                      (NumPy)            │
 │                                         │               │
 │                                         ▼               │
@@ -60,7 +60,7 @@ The result is a tool that teaches sociological thinking *through the lived exper
                              │
                              ▼
 ┌─────────────────────────────────────────────────────────┐
-│                    Flask Web App                         │
+│                    Flask Web App                        │
 │                       app.py                            │
 │                                                         │
 │   index.html  ◄──►  /api/hawkai  ◄──►  Runtime          │
@@ -83,66 +83,13 @@ HawkAI/
 └── embeddingDatabase.json  # Cached vector index (not in repo)
 ```
 
-### Module Breakdown
-
-**`setup.py`** — ETL Pipeline
-- Reads `.docx` files (python-docx) and `.pdf` files (PyMuPDF) from a target directory
-- Batch-embeds all extracted text via Gemini's embedding API
-- Serializes the text + embedding pairs to a JSON cache file
-
-**`runtime.py`** — Search & Generation
-- Loads the cached vector index into memory
-- Embeds incoming user queries with the same model
-- Computes dot-product similarity across all narrative vectors using NumPy
-- Passes the top-ranked narrative + user concept into a structured prompt for Gemini 2.5 Pro
-
-**`app.py`** — Web Application
-- Loads the vector index on startup
-- Serves the frontend and exposes a `/api/hawkai` POST endpoint
-- Returns the generated analysis and similarity score as JSON
-
-**`main.py`** — CLI Testing
-- Standalone script for running queries against the index without the web server
-
 ---
 
-## How It Works
+# How It Works
 
-### 1. Building the Index (One-Time Setup)
-
-```bash
-python setup.py
-```
-
-This ingests all documents from the target folder, embeds each one through the Gemini API, and writes the full index to `embeddingDatabase.json`.
-
-### 2. Running the Application
-
-```bash
-export GOOGLE_API_KEY=your_key_here
-python app.py
-```
-
-The server loads the cached index into memory and starts listening on `http://localhost:5001`.
-
-### 3. Querying
-
-Send a POST request to `/api/hawkai`:
-
-```json
-{
-  "concept": "The Looking Glass Self"
-}
-```
-
-Response:
-
-```json
-{
-  "result": "Quote from Student Narrative: ...\n\nBrief Summary: ...\n\nDescription of Sociological Concept: ...",
-  "score": 0.8234
-}
-```
+- 1. Set 'GOOGLE_API_KEY' to Gemini API key as environment variable
+- 2. run app.py
+- 3. navigate to 'http://localhost:5001'
 
 ---
 
@@ -153,7 +100,7 @@ Response:
 - **LLM / Embedding API:** Google Gemini (embedding-001, Gemini 2.5 Pro)
 - **Vector Math:** NumPy
 - **Document Parsing:** python-docx, PyMuPDF (fitz)
-- **Caching:** JSON serialization
+- **Caching:** JSON
 - **Deployment:** PythonAnywhere
 
 ---
