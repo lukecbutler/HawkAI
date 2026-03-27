@@ -1,8 +1,8 @@
-# 🦅 HawkAI
+# HawkAI
 
 **A Retrieval-Augmented Generation platform that connects students to each other's experiences through semantic search.**
 
-HawkAI is the first custom LLM application of its kind at UNCW. Rather than generating content from a general-purpose model, it searches a corpus of 500+ student essays by *meaning and emotional context*, retrieves the most relevant narrative, and generates a structured sociological analysis, enabling students to query and connect with their peers' past work.
+HawkAI is the first custom LLM application of its kind at UNCW. Rather than generating content from a general-purpose model, it searches a corpus of 500+ student essays by meaning and emotional context, retrieves the most relevant narrative, and generates a structured sociological analysis, enabling students to query and connect with their peers' past work.
 
 Built for the Department of Sociology & Criminology at the University of North Carolina Wilmington as part of ongoing LLM research. 
 Research paper: *Generating Connections, Not Content: The Hawk AI Place-Based LLM* (Elliott, Engelman, Oh, Butler).
@@ -47,7 +47,7 @@ The result is a tool that teaches sociological thinking *through the lived exper
 │                     runtime.py                          │
 │                                                         │
 │   User Query  ──►  Embed Query  ──►  Dot-Product        │
-│                     (Gemini)         Similarity         │
+│                                      Similarity         │
 │                                      (NumPy)            │
 │                                         │               │
 │                                         ▼               │
