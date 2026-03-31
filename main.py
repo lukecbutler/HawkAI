@@ -22,7 +22,6 @@ def run():
     print(f"\nEmbedding the query: '{USER_QUERY}'...")
     embeddedQuery = embedUserQuery(userQuery=USER_QUERY, client=client)
 
-    # --- THIS IS THE UPDATED SECTION ---
     print("Finding the most relevant narrative...")
     # 1. Unpack the tuple into two separate variables
     mostRelatedNarrativeToQuery, score = findNarrativeUsingDotProduct(

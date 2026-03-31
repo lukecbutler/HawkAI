@@ -83,7 +83,7 @@ def handle_hawkai_query():
         # Log the full error in a real application
         return jsonify({"error": "An internal server error occurred"}), 500
     
-# --- Run the App ---
+    
 if __name__ == '__main__':
     load_data() # Load embedded database before starting the server
     app.run(debug=True, host='0.0.0.0', port=5001)
